@@ -1,5 +1,5 @@
 
-var it = require('it')
+var it = require('it-is')
   , render = require('../render2')
   , log = require('logger')
   
