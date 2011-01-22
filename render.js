@@ -5,6 +5,13 @@ var traverser = require('traverser')
   
 exports = module.exports = render
 
+exports.Special = Special
+
+function Special (string){
+  if(!(this instanceof Special)) return new Special(string)
+  this.toString = function(){return string}
+}
+
 var defaults = {
   indent: ''
 , pad: ' '
@@ -34,8 +41,7 @@ var defaults = {
    return 'var' + index + '='
 }
 , surround: function (objString,p){
- 
-    if(p.value instanceof Date || p.value instanceof RegExp)
+    if(p.value instanceof Date || p.value instanceof RegExp || p.value instanceof Special)
       return p.value.toString()
     if(p.value instanceof Array)
       return '[' + objString + ']'
