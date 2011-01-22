@@ -28,7 +28,7 @@ var defaults = {
         ( function (e) {return indent(e, self.indent)} ).join (this.joiner) + pad)
   }
 , reference: function (rendered,p){
-  return 'var' + p.index.repeated //+ "dfsdfdsf"
+  return 'var' + p.index.repeated
 }
 , referenced: function (index,p){
    return 'var' + index + '='

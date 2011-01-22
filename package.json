@@ -1,0 +1,18 @@
+{
+  "name": "render",
+  "description": "customizable rendering for js objects",
+  "version": "0.0.0",
+  "homepage": "https://github.com/dominictarr/render",
+  "repository": "git://github.com/dominictarr/render.git",
+  "author": "Dominic Tarr <dominic.tarr@gmail.com>",
+  "main": "render",
+  "directories": {
+    "lib": ""
+  },
+  "dependencies": {
+    "traverser": "0.0.x"
+  },
+  "engines": {
+    "node": "*"
+  }
+}

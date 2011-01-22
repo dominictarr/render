@@ -1,7 +1,7 @@
 
 var it = require('it-is')
   , render = require('../render')
-  , log = require('logger')
+  , log = console.log
   
 exports ['renders an object'] = function (test){
   var a,b,c
