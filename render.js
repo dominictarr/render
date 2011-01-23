@@ -14,25 +14,37 @@ function Special (string){
 
 var defaults = {
   indent: ''
-, pad: ' '
+, pad: ''
+, padKey: ' '
+, padSingle: ['', '']
+, padJoin: [' ', ' ']
+, padMulti: ['', '']
+, padRoot: ['', '']
 , joiner: ', '
+, string: function (string,p){
+  return JSON.stringify(string)
+}
 , value: function (value,p){
     if(p.value === undefined)
       return 'undefined'
     if('string' === typeof value)
-      return "\"" + value.split('\n').join('\n ') + "\""
+      return this.string(value,p)
+//      return "\"" + value.split('\n').join('\n ') + "\""
 
     return JSON.stringify(value)
   }
 , key: function (key, p){
-    return p.parent instanceof Array ? '' : (/^\w+$/(key) ? key : "'" + key + "'") + ": "
+    return p.parent instanceof Array ? '' : (/^\w+$/(key) ? key : "'" + key + "'") + ":" + this.padKey
   }
 , join: function (lines,p,def){
     var self = this
       , pad = lines.length ? self.pad : ''
-    return ( pad + 
-          lines.map 
-        ( function (e) {return indent(e, self.indent)} ).join (this.joiner) + pad)
+    if(!lines.length)
+      return ''
+    return ( this.padJoin[0] + 
+              lines.map 
+              ( function (e) {return indent(e, self.indent)} ).join (this.joiner)
+            + this.padJoin[1])
   }
 , reference: function (rendered,p){
   return 'var' + p.index.repeated
@@ -51,12 +63,19 @@ var defaults = {
       return  p.value.toString().replace(/{.+}$/m,'{...}')
     return '{' + objString + '}'
   }
+, multiline: function (objString,p){
+  if(p.parent)
+    return this.padMulti[0] + objString + this.padMulti[1]
+  return this.padRoot[0] + objString + this.padRoot[1]
+}
 }
 function render (obj, options){
   options = options || {}
   if(options.multi){
     options.indent = '  '
     options.joiner = '\n, '
+/*    options.padSingle = ['','']
+    options.padJoin = [' ',' ']*/
   }
 
     options.__proto__ = defaults
@@ -72,11 +91,14 @@ function render (obj, options){
      var r = call('reference',p.index.seen,p)
       if(r !== undefined) return key + r
     }
-    return key + (p.referenced ? call('referenced',p.index.repeated,p) : '') + 
-      call('surround',call('join',p.map(),p),p)
+    var object = call('surround',call('join',p.map(),p),p)
+      if( -1 !== object.indexOf('\n') )
+        object = call('multiline',object,p)
+
+    return key + (p.referenced ? call('referenced',p.index.repeated,p) : '') + object
   }
   function leaf (p){
-    return (p.parent ? call('key',p.key,p) : '') + call('value',p.value,p) 
+    return (p.parent ? call('key',p.key,p) : '') + options.padSingle[0] + call('value',p.value,p) + options.padSingle[1]
   }
   function call(method,value,p){
     return options[method](value,p,options.__proto__[method])

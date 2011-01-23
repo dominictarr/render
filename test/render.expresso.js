@@ -43,8 +43,8 @@ exports ['multiline and indentation'] = function (test) {
   , [ [1,2,{x:'asdfasfasf',y:{K:21434}},[3,4]]
     , "[ 1\n, 2\n, { x: \"asdfasfasf\"\n  , y: { K: 21434 } }\n, [ 3\n  , 4 ] ]" ]
   , [ {}, '{}']
-  , [ [1,2,"hello\nthere",4] 
-    , "[ 1\n, 2\n, \"hello\n   there\"\n, 4 ]" ]
+/*  , [ [1,2,"hello\nthere",4] 
+    , "[ 1\n, 2\n, \"hello\n   there\"\n, 4 ]" ]*/
   , [ {a:'b'}, '{ a: "b" }']
   , [ c, 'var0=[ var0 ]']
   , [ function a (x,y,z){}, 'function a(x,y,z){}']
