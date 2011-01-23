@@ -1,6 +1,8 @@
 #Render#
 
-get complete control of how your objects are turned into text.
+get complete control* of how your objects are turned into text.
+
+* well, not exactly "complete", turns out this is a *hard* problem.
 
 #Default#
 
@@ -10,7 +12,7 @@ options is a {} of functions which overwrite the default way to stringify each p
 
 see `render.js` and `test/*.js` for examples
 
-#customize rendering#
+#Customize Rendering#
 
 these functions are:
 
@@ -23,8 +25,16 @@ these functions are:
 
     string // stringify string (useful if you want to handle multi line strings a special way
     
-when the rendering is done, the default options object is set to `options.__proto__`
-so it is possible to wrap a default method by calling `this.__proto__[name]`
+#Renderer function args#
+
+    function(value, traverserProperties, default)
+    
+`value` is the item to be renderer,
+`traverserProperties` if information about current place in the tree/graph 
+(see https://github.com/dominictarr/traverser)
+`default` is the default rendering function for this item.
+
+#Layout Control#
 
 also, padding around certain items can be changed by setting the following values of options:
 
@@ -39,7 +49,6 @@ also, padding around certain items can be changed by setting the following value
     
 examples, by adjusting these settings you can display an object in many different styles:
 
-#Layout Control#
 
 this object:
 

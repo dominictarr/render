@@ -2,7 +2,7 @@
 //a better renderer using traverser
 
 var traverser = require('traverser')
-  
+  , inspect = require('util').inspect
 exports = module.exports = render
 
 exports.Special = Special
@@ -21,14 +21,35 @@ var defaults = {
 , padMulti: ['', '']
 , padRoot: ['', '']
 , joiner: ', '
+, padJoinCompact: [' ', ' ']
+, joinerCompact: ', '
+, indentCompact: ''
+, compactLength: false
+, isCompact: function (object,p){
+    if(!this.compactLength)
+      return false
+    var length = 0
+    for(var i in object){
+      if(object[i] && ('object' == typeof object[i] || 'function' == typeof object[i]))
+        length += object[i].length || 5
+      else
+        length += ('' + object[i]).length + 2
+    }
+    console.log('length:' + length + " compactLength:" + this.compactLength + ' ' + object)
+    return (length < this.compactLength)
+  }
 , string: function (string,p){
-  return JSON.stringify(string)
-}
+    return JSON.stringify(string)
+  }
 , value: function (value,p){
     if(p.value === undefined)
       return 'undefined'
-    if('string' === typeof value)
-      return this.string(value,p)
+    if('string' === typeof value){
+      if(!this.string)
+        require('logger')("!this.string", this)
+
+      return this.string(value,p,function (z,x,c){return this.__proto__.string(z,x,c)})
+    }
 //      return "\"" + value.split('\n').join('\n ') + "\""
 
     return JSON.stringify(value)
@@ -39,12 +60,23 @@ var defaults = {
 , join: function (lines,p,def){
     var self = this
       , pad = lines.length ? self.pad : ''
+      , joiner = this.joiner
+      , padJoin = this.padJoin
+      , indentation = this.indent
+
     if(!lines.length)
       return ''
-    return ( this.padJoin[0] + 
+    if(this.isCompact(lines,p)){
+      joiner = this.joinerCompact
+      padJoin = this.padJoinCompact
+      indentation = this.indentCompact
+    }
+      
+
+    return ( padJoin[0] + 
               lines.map 
-              ( function (e) {return indent(e, self.indent)} ).join (this.joiner)
-            + this.padJoin[1])
+              ( function (e) {return indent(e, indentation)} ).join (joiner)
+            + padJoin[1])
   }
 , reference: function (rendered,p){
   return 'var' + p.index.repeated
@@ -92,7 +124,7 @@ function render (obj, options){
       if(r !== undefined) return key + r
     }
     var object = call('surround',call('join',p.map(),p),p)
-      if( -1 !== object.indexOf('\n') )
+      if(object && -1 !== object.indexOf('\n') )
         object = call('multiline',object,p)
 
     return key + (p.referenced ? call('referenced',p.index.repeated,p) : '') + object
@@ -101,7 +133,7 @@ function render (obj, options){
     return (p.parent ? call('key',p.key,p) : '') + options.padSingle[0] + call('value',p.value,p) + options.padSingle[1]
   }
   function call(method,value,p){
-    return options[method](value,p,options.__proto__[method])
+    return options[method](value,p,function (x,y,z){return options.__proto__[method](x,y,z)})
   }
 }
 
