@@ -42,6 +42,7 @@ examples, by adjusting these settings you can display an object in many differen
 #Layout Control#
 
 this object:
+
     var renderme = 
         { key1: value
         , key2: value
@@ -51,57 +52,57 @@ this object:
 
 indented with comma first
     
-  render(renderme,{joiner:"\n, ", indent: '  '})
+    render(renderme,{joiner:"\n, ", indent: '  '})
 
-  { key1: 1
-  , key2: 2
-  , child: { key1: 3
-    , key2: 4 } }
+    { key1: 1
+    , key2: 2
+    , child: { key1: 3
+      , key2: 4 } }
 
 indented, comma-first, object-newline
 
-  render(renderme,{joiner:"\n, ", indent: '  ', padMulti: ['\n','']})
+    render(renderme,{joiner:"\n, ", indent: '  ', padMulti: ['\n','']})
 
-  { key1: 1
-  , key2: 2
-  , child: 
-    { key1: 3
-    , key2: 4 } }
+    { key1: 1
+    , key2: 2
+    , child: 
+      { key1: 3
+      , key2: 4 } }
 
 indented, comma-first, bracket-ownline, cl-bracket-trailing
 
-  render(renderme,{joiner:"\n, ", indent: '  ', padJoin: ['\n  ',' ']}
+    render(renderme,{joiner:"\n, ", indent: '  ', padJoin: ['\n  ',' ']}
 
-  {
-    key1: 1
-  , key2: 2
-  , child: {
-      key1: 3
-    , key2: 4 } }
+    {
+      key1: 1
+    , key2: 2
+    , child: {
+        key1: 3
+      , key2: 4 } }
 
 indented, comma-first, bracket-newline, cl-bracket-newline
 
-  render(renderme,{joiner:"\n, ", indent: '  ', padJoin: ['\n  ','\n']}
+    render(renderme,{joiner:"\n, ", indent: '  ', padJoin: ['\n  ','\n']}
 
-  {
-    key1: 1
-  , key2: 2
-  , child: {
-      key1: 3
-    , key2: 4
+    {
+      key1: 1
+    , key2: 2
+    , child: {
+        key1: 3
+      , key2: 4
+      }
     }
-  }
 
 indented, comma-trailing, bracket-newline, cl-bracket-newline
 
-  render(renderme,{joiner:",\n  ", indent: '  ', padJoin: ['\n  ','\n']}
+    render(renderme,{joiner:",\n  ", indent: '  ', padJoin: ['\n  ','\n']}
 
-  {
-    key1: 1,
-    key2: 2,
-    child: {
-      key1: 3,
-      key2: 4
+    {
+      key1: 1,
+      key2: 2,
+      child: {
+        key1: 3,
+        key2: 4
+      }
     }
-  }
 
