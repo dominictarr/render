@@ -18,7 +18,8 @@ exports ['renders an object'] = function (test){
   , [ c, 'var0=[ var0 ]']
   , [ function a (x,y,z){}, 'function a(x,y,z){}']
   , [ function (){'blah blah blah'}, 'function (){...}']
-  , [ {X: function (){'blah blah blah'} }, '{ X: function (){...} }']
+  , [ {X: function (){'blah blah blah'
+          return } }, '{ X: function (){...} }']
   ]
 
 //thats a basics. multilines and indentation.

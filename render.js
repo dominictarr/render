@@ -2,7 +2,7 @@
 //a better renderer using traverser
 
 var traverser = require('traverser')
-  , inspect = require('util').inspect
+//  , inspect = require('sys').inspect
 exports = module.exports = render
 
 exports.Special = Special
@@ -35,7 +35,6 @@ var defaults = {
       else
         length += ('' + object[i]).length + 2
     }
-    console.log('length:' + length + " compactLength:" + this.compactLength + ' ' + object)
     return (length < this.compactLength)
   }
 , string: function (string,p){
@@ -92,7 +91,7 @@ var defaults = {
     if(p.value === null)
       return 'null'
     if('function' == typeof p.value)
-      return  p.value.toString().replace(/{.+}$/m,'{...}')
+      return  p.value.toString().replace(/{(\n|.)+}$/,'{...}')
     return '{' + objString + '}'
   }
 , multiline: function (objString,p){
