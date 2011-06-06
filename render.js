@@ -70,7 +70,6 @@ var defaults = {
       padJoin = this.padJoinCompact
       indentation = this.indentCompact
     }
-      
 
     return ( padJoin[0] + 
               lines.map 
@@ -109,7 +108,7 @@ function render (obj, options){
     options.padJoin = [' ',' ']*/
   }
 
-    options.__proto__ = defaults
+  options.__proto__ = defaults
   return traverser(obj, {branch: branch, leaf: leaf, isBranch:isBranch, pre:true})
   
   function isBranch(p){
@@ -117,9 +116,9 @@ function render (obj, options){
   }
   function branch (p){
     var key = (p.parent ? call('key',p.key,p) : '')    
-  
-    if(p.reference){
-     var r = call('reference',p.index.seen,p)
+
+    if(p.reference && ~p.index.repeated){
+     var r = call('reference',p.index.repeated,p)
       if(r !== undefined) return key + r
     }
     var object = call('surround',call('join',p.map(),p),p)
@@ -140,3 +139,37 @@ function indent (s, ch){
     return s.split('\n').join('\n' + ch)
 }
 
+/*
+  I describe all these helpful styles in the readme, why not add them as functions?
+*/
+
+render.cf = function (renderme){
+  return render(renderme,{joiner:"\n, ", indent: '  ', padMulti: ['\n','']})
+}
+
+render.ct = function (renderme){
+  return render(renderme,{joiner:",\n  ", indent: '  ', padMulti: ['\n','']})
+}
+
+render.cfbn = function (renderme){
+  return render(renderme,{joiner:"\n, ", indent: '  ', padJoin: ['\n  ','\n']})
+}
+
+render.ctbn = function (renderme){
+  return render(renderme,{joiner:",\n  ", indent: '  ', padJoin: ['\n  ','\n']})
+}
+
+
+function loggify(func){
+
+  func.log = function (){
+    var args = [].slice.call(arguments)
+    console.log.apply(null,args.map(function (x){return func(x)}))
+  }
+}
+
+loggify(render)
+loggify(render.ct)
+loggify(render.cf)
+loggify(render.ctbn)
+loggify(render.cfbn)
