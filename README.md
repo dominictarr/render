@@ -1,18 +1,101 @@
 #Render#
 
-get complete control* of how your objects are turned into text.
+render objects to strings showing thier true structure.
 
-* well, not exactly "complete", turns out this is a *hard* problem.
+i.e.
 
-#Default#
+    var a = [1,2,3]
+    a.push(a)
+    
+    render(a)
+    
+    //var0 = [1,2,3,var0]
+
+if an object is circular render shows where it is circular!
+
+#convenience .log method
+
+    var log = require('render').cf.log //comma first style!
+      , log2 = require('render').ct.log //comma trailing style!
+
+#Layout Styles#
+
+this object:
+
+    var renderme = 
+        { key1: value
+        , key2: value
+        , child: 
+          { key1: value
+          , key2: value } }
+
+import render:
+
+    var render = require('render')
+
+##indented, comma-first, object-newline
+
+    render.ct(renderme)
+
+    // render(renderme,{joiner:"\n, ", indent: '  ', padMulti: ['\n','']})
+
+    { key1: 1
+    , key2: 2
+    , child: 
+      { key1: 3
+      , key2: 4 } }
+
+##indented, comma-first, bracket-newline, cl-bracket-newline
+
+    render.cfbn(renderme)
+
+    // render(renderme,{joiner:"\n, ", indent: '  ', padJoin: ['\n  ','\n']}
+
+    {
+      key1: 1
+    , key2: 2
+    , child: {
+        key1: 3
+      , key2: 4
+      }
+    }
+
+##indented, comma-trailing, object-newline
+
+    render.ct(renderme)
+
+    // render(renderme,{joiner:",\n  ", indent: '  ', padJoin: ['\n  ','\n']}
+
+    { key1: value,
+      key2: value,
+      child: 
+      { key1: value,
+        key2: value } }
+
+
+##indented, comma-first, bracket-ownline, cl-bracket-newline
+
+    render.ctbn(renderme)
+
+    // render(renderme,{joiner:",\n  ", indent: '  ', padJoin: ['\n  ','\n']}
+
+    {
+      key1: 1,
+      key2: 2,
+      child: {
+        key1: 3,
+        key2: 4
+      }
+    }
+
+
+#Heavy Duty Object -> ASCII
 
     render(object,options)
 
-options is a {} of functions which overwrite the default way to stringify each part of the object.
+options is a {} of functions which define how a particular type is stringified.
 
-see `render.js` and `test/*.js` for examples
-
-#Customize Rendering#
+(see `render.js` and `test/*.js` for examples)
 
 these functions are:
 
@@ -48,70 +131,3 @@ also, padding around certain items can be changed by setting the following value
     , padRoot: ['', ''] //padding around the root object (only applied if it's multi lined)
     
 examples, by adjusting these settings you can display an object in many different styles:
-
-
-this object:
-
-    var renderme = 
-        { key1: value
-        , key2: value
-        , child: 
-          { key1: value
-          , key2: value } }
-
-indented with comma first
-    
-    render(renderme,{joiner:"\n, ", indent: '  '})
-
-    { key1: 1
-    , key2: 2
-    , child: { key1: 3
-      , key2: 4 } }
-
-indented, comma-first, object-newline
-
-    render(renderme,{joiner:"\n, ", indent: '  ', padMulti: ['\n','']})
-
-    { key1: 1
-    , key2: 2
-    , child: 
-      { key1: 3
-      , key2: 4 } }
-
-indented, comma-first, bracket-ownline, cl-bracket-trailing
-
-    render(renderme,{joiner:"\n, ", indent: '  ', padJoin: ['\n  ',' ']}
-
-    {
-      key1: 1
-    , key2: 2
-    , child: {
-        key1: 3
-      , key2: 4 } }
-
-indented, comma-first, bracket-newline, cl-bracket-newline
-
-    render(renderme,{joiner:"\n, ", indent: '  ', padJoin: ['\n  ','\n']}
-
-    {
-      key1: 1
-    , key2: 2
-    , child: {
-        key1: 3
-      , key2: 4
-      }
-    }
-
-indented, comma-trailing, bracket-newline, cl-bracket-newline
-
-    render(renderme,{joiner:",\n  ", indent: '  ', padJoin: ['\n  ','\n']}
-
-    {
-      key1: 1,
-      key2: 2,
-      child: {
-        key1: 3,
-        key2: 4
-      }
-    }
-
