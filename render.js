@@ -44,9 +44,6 @@ var defaults = {
     if(p.value === undefined)
       return 'undefined'
     if('string' === typeof value){
-      if(!this.string)
-        require('logger')("!this.string", this)
-
       return this.string(value,p,function (z,x,c){return this.__proto__.string(z,x,c)})
     }
 //      return "\"" + value.split('\n').join('\n ') + "\""
@@ -109,7 +106,7 @@ function render (obj, options){
   }
 
   options.__proto__ = defaults
-  return traverser(obj, {branch: branch, leaf: leaf, isBranch:isBranch, pre:true})
+  return traverser(obj, {branch: branch, leaf: leaf, isBranch:isBranch, pre:true, iterator:options.iterator || 'map'})
   
   function isBranch(p){
     return ('function' == typeof p.value || 'object' == typeof p.value)
@@ -121,7 +118,7 @@ function render (obj, options){
      var r = call('reference',p.index.repeated,p)
       if(r !== undefined) return key + r
     }
-    var object = call('surround',call('join',p.map(),p),p)
+    var object = call('surround',call('join',p.iterate(),p),p)
       if(object && -1 !== object.indexOf('\n') )
         object = call('multiline',object,p)
 
@@ -139,29 +136,72 @@ function indent (s, ch){
     return s.split('\n').join('\n' + ch)
 }
 
+render.json = function (renderme){
+  return render(renderme,json)
+}
+
 /*
   I describe all these helpful styles in the readme, why not add them as functions?
 */
 
-render.cf = function (renderme){
-  return render(renderme,{joiner:"\n, ", indent: '  ', padMulti: ['\n','']})
+var settings = {
+  cf:{joiner:"\n, ", indent: '  ', padMulti: ['\n','']}
+, ct:{joiner:",\n  ", indent: '  ', padMulti: ['\n','']}
+, cfbn: {joiner:"\n, ", indent: '  ', padJoin: ['\n  ','\n']}
+, ctbn: {joiner:",\n  ", indent: '  ', padJoin: ['\n  ','\n']}
+}
+var json = {
+      key: function (value,p){
+          return p.parent instanceof Array ? '' : JSON.stringify(p.key) + ":" + this.padKey
+        }
+      , surround: function (objString,p,def){
+          if('function' === typeof p.value)
+            return 'null'
+          if(p.value instanceof Date || p.value instanceof RegExp || 'function' == typeof p.value)
+            return JSON.stringify(p.value)
+          return def(objString,p)
+         }
+      , iterator: function (obj, func){
+          var mapped = []
+          Object.keys(obj).forEach(function (e){
+            if('function' != typeof obj[e])
+              mapped.push(func(obj[e],e))
+          })
+          return mapped
+        }
+      }
+
+function merge (bottom,top){
+  var n = {}
+  for(var key in bottom){
+    n[key] = bottom[key]
+  }
+  for(var key in top){
+    n[key] = top[key]
+  }
+  return n
 }
 
-render.ct = function (renderme){
-  return render(renderme,{joiner:",\n  ", indent: '  ', padMulti: ['\n','']})
-}
+//(function (){
+  for(var key in settings){
+    (function (key) {
+      render.json[key] = function (renderme){return render(renderme, merge(json,settings[key]))}
+    })(key)
+  }
+//})()
 
-render.cfbn = function (renderme){
-  return render(renderme,{joiner:"\n, ", indent: '  ', padJoin: ['\n  ','\n']})
-}
 
-render.ctbn = function (renderme){
-  return render(renderme,{joiner:",\n  ", indent: '  ', padJoin: ['\n  ','\n']})
-}
+(function (){
+  for(var key in settings){
+    (function (key) {
+      render[key] = function (renderme){return render(renderme, settings[key])}
+    })(key)
+  }
+})()
+
 
 
 function loggify(func){
-
   func.log = function (){
     var args = [].slice.call(arguments)
     console.log.apply(null,args.map(function (x){return func(x)}))
