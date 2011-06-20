@@ -1,7 +1,4 @@
 #Render#
-
-##pretty printer
-
 ## 4 styles
   
   * comma first: `.cf`
