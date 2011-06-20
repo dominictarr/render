@@ -182,25 +182,6 @@ function merge (bottom,top){
   return n
 }
 
-//(function (){
-  for(var key in settings){
-    (function (key) {
-      render.json[key] = function (renderme){return render(renderme, merge(json,settings[key]))}
-    })(key)
-  }
-//})()
-
-
-(function (){
-  for(var key in settings){
-    (function (key) {
-      render[key] = function (renderme){return render(renderme, settings[key])}
-    })(key)
-  }
-})()
-
-
-
 function loggify(func){
   func.log = function (){
     var args = [].slice.call(arguments)
@@ -209,6 +190,17 @@ function loggify(func){
 }
 
 loggify(render)
+
+//install modes
+for(var key in settings){
+  (function (key) {
+    render.json[key] = function (renderme){return render(renderme, merge(json,settings[key]))}
+    render[key] = function (renderme){return render(renderme, settings[key])}
+    render.log[key] = function (renderme){return console.log(render(renderme, settings[key]))}
+  })(key)
+}
+
+//this is the old api, I have a few modules somewhere that depend on this style
 loggify(render.ct)
 loggify(render.cf)
 loggify(render.ctbn)
