@@ -12,6 +12,9 @@
   "dependencies": {
     "traverser": "0.0.x"
   },
+  "devDependencies": {
+    "it-is": "0.0.x"
+  },
   "engines": {
     "node": "*"
   }
