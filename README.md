@@ -1,22 +1,19 @@
 #Render#
 
-render objects to strings showing thier true structure.
+##pretty printer
 
-i.e.
+## 4 styles
+  
+  * comma first: `.cf`
+  * comma trailing : `.ct`
+  * comma fist bracket newline: `.cfbn`
+  * comma trailing bracket newline: `.ctbn`
 
-    var a = [1,2,3]
-    a.push(a)
-    
-    render(a)
-    
-    //var0 = [1,2,3,var0]
+## 3 handy modes
 
-if an object is circular render shows where it is circular!
-
-#convenience .log method
-
-    var log = require('render').cf.log //comma first style!
-      , log2 = require('render').ct.log //comma trailing style!
+  * return string `render.[cf|ct|cfbn|ctbn]`
+  * log to console `render.log.[cf|ct|cfbn|ctbn]`
+  * return json `render.json.[cf|ct|cfbn|ctbn]`
 
 #Layout Styles#
 
