@@ -205,3 +205,23 @@ loggify(render.ct)
 loggify(render.cf)
 loggify(render.ctbn)
 loggify(render.cfbn)
+
+
+
+if(!module.parent) {
+  var es = require('event-stream')
+  es.pipeable(
+    function () {
+      return function (data, callback) {            
+              var j 
+              try {
+                j = JSON.parse(data)
+              } catch (err) {
+                return callback(null, data)
+              }
+              callback(null, render.cf(j))
+            }
+      }
+    )
+}
+  
