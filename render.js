@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 //render2.js
 //a better renderer using traverser
 
@@ -51,7 +52,7 @@ var defaults = {
     return JSON.stringify(value)
   }
 , key: function (key, p){
-    return p.parent instanceof Array ? '' : (/^\w+$/(key) ? key : "'" + key + "'") + ":" + this.padKey
+    return p.parent instanceof Array ? '' : (/^\w+$/.test(key) ? key : "'" + key + "'") + ":" + this.padKey
   }
 , join: function (lines,p,def){
     var self = this
@@ -79,6 +80,7 @@ var defaults = {
 , referenced: function (index,p){
    return 'var' + index + '='
 }
+//these should really be delt with at isBranch
 , surround: function (objString,p){
     if(p.value instanceof Date || p.value instanceof RegExp || p.value instanceof Special)
       return p.value.toString()
