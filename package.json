@@ -5,18 +5,10 @@
   "homepage": "https://github.com/dominictarr/render",
   "repository": "git://github.com/dominictarr/render.git",
   "author": "Dominic Tarr <dominic.tarr@gmail.com>",
-  "main": "./render.js",
   "dependencies": {
     "traverser": "0.0.x"
-  , "event-stream": "0.5"
-  },
-  "bin":{
-    "json_render": "./render.js"
   },
   "devDependencies": {
     "it-is": "0.0.x"
-  },
-  "engines": {
-    "node": "*"
   }
 }
