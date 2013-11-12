@@ -67,7 +67,7 @@ import render:
         key2: value } }
 
 
-##indented, comma-first, bracket-ownline, cl-bracket-newline
+##indented, comma-trailing, bracket-ownline, cl-bracket-newline
 
     render.ctbn(renderme)
 
