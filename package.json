@@ -10,5 +10,6 @@
   },
   "devDependencies": {
     "it-is": "0.0.x"
-  }
+  },
+  "license": "MIT"
 }

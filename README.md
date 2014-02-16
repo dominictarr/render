@@ -125,3 +125,7 @@ also, padding around certain items can be changed by setting the following value
     , padRoot: ['', ''] //padding around the root object (only applied if it's multi lined)
     
 examples, by adjusting these settings you can display an object in many different styles:
+
+## License
+
+MIT
